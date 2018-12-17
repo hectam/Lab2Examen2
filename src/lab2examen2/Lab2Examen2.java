@@ -23,7 +23,8 @@ public class Lab2Examen2 {
         Scanner leer=new Scanner(System.in);
         Equipos q=new Equipos();
         Jugadores w=new Jugadores();
-        
+        int op=0;
+        do{
         System.out.println("\tMenu Principal"
                 + "\n1. Crear Equipo"
                 + "\n2. modificar Equipo"
@@ -34,7 +35,7 @@ public class Lab2Examen2 {
                 + "\n7. Listar equipos junto con jugadores"
                 + "\n8. Listar jugadores por posicion"
                 + "\n9. Equipos ordenados por capacidad de estadio");
-        int op=run.nextInt();
+        op=run.nextInt();
         switch(op){
             case 1:
                 System.out.println("Crear Equipo"
@@ -77,8 +78,20 @@ public class Lab2Examen2 {
                   w.crearJ(n, ju, num, pos,edad,nac);
                 break;
             case 4:
+                System.out.println("Eliminar Cuenta"
+                        + "\n Ingrese la cuenta a eliminar:");
+                int v=leer.nextInt();
+                q.eliminarEquipo(v);
                 break;
             case 5:
+                System.out.println("Equipos ordenados de mayor a menor por cantidad de jugadores");
+                int pe=q.retornaM();
+                q.mostrarEquipo(pe);
+                break;
+            case 6:
+                System.out.println("Jugadores Ordenados por Edad: ");
+               int max= w.retornaAge();
+               w.mostrarJ(max);
                 break;
             case 7:
                 break;
@@ -90,7 +103,7 @@ public class Lab2Examen2 {
         }
         
         
-        
+        }while(op!=9); 
         // TODO code application logic here
     }
     

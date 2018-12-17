@@ -18,10 +18,13 @@ public class Equipos {
     File f;
     RandomAccessFile cod,team;
 
-    public Equipos() throws FileNotFoundException {
+    public Equipos() throws FileNotFoundException, IOException {
         f=new File("Equipos.team");
         cod=new RandomAccessFile("codigos.asd","rw");
         team=new RandomAccessFile(f,"rw");
+        if (cod.length()==0) {
+            cod.writeInt(1);
+        }
     }
     private void initCodes() throws IOException{
         if (cod.length()==0) {
@@ -38,10 +41,13 @@ return code;
     
  public void crearEquipo(String nombre,String city,int cap) throws IOException{
      team.seek(team.length());
+     
      team.writeInt(getCode());
      team.writeUTF(nombre);
      team.writeUTF(city);
      team.writeInt(cap);
+     team.writeInt(0);
+     team.writeBoolean(true);
      System.out.println("Equipo Creado!!!!");
   
  }
@@ -54,6 +60,8 @@ return code;
          team.readUTF();//nombre
          team.readUTF();//ciudad
          team.readInt();//capacidad
+         team.readInt();
+         team.readBoolean();
          if(m==b){
             return c; 
              
@@ -86,13 +94,16 @@ return code;
          String name=team.readUTF();//nombre
          team.readUTF();//ciudad
          team.readInt();//capacidad
+         int w=team.readInt();
+        boolean q= team.readBoolean();
         
-            all+= "\n"+p+"."+name+" codigo: "+m; 
+            if(q==true){
              
-         
+         System.out.println("\n"+p+"."+name+" codigo: "+m);
+            }
          
      }
-     System.out.println(all);
+     
      
  }
  public int buscarC(int b) throws IOException{
@@ -103,7 +114,9 @@ return code;
          team.readUTF();//nombre
          team.readUTF();//ciudad
          team.readInt();//capacidad
-         if(m==b){
+         team.readInt();
+         boolean q= team.readBoolean();
+         if(m==b && q==true){
             return m; 
              
          }
@@ -112,14 +125,115 @@ return code;
      return 0;
      
  }
+ public void eliminarEquipo(int c) throws IOException{
+     if(buscar(c) !=0){
+        
+         team.readUTF();
+         team.readUTF();
+         team.readInt();
+         team.readInt();
+         team.writeBoolean(true);
+         System.out.println("Eliminada");
+         
+     }
+     
+ }
+ public void buscarNum(int cod) throws IOException{
+     if(buscar(cod) !=0){
+       team.seek(buscar(cod));
+         team.readUTF();
+         team.readUTF();
+         team.readInt();
+         long ret=team.getFilePointer();
+         int ju=team.readInt();
+         team.readBoolean();
+         team.seek(ret);
+           ju++;
+            team.writeInt(ju);  
+             
+         
+         
+         System.out.println("prron");
+         
+     }
+     
+ }
  
  
+ public void mostrarEquipo(int total) throws IOException{
+     if(total>0){
+     team.seek(0);
+     int p=total;
+     
+     while(team.getFilePointer()<team.length()){
+         
+         int m=team.readInt();//codigo
+         String name=team.readUTF();//nombre
+         String ciudad=team.readUTF();//ciudad
+         int capa=team.readInt();//capacidad
+        int ju= team.readInt();
+        boolean q= team.readBoolean();
+        if(ju==p && q==true){
+            
+            
+             p--;
+         System.out.println("\nEquipo: "+name+" codigo: "+m+" Ciudad: "+ciudad+" Capacidad Estadio: "+capa) ;
+         mostrarEquipo(p);
+            
+        }else{
+            
+        }
+         
+     }
+     p--;
+            mostrarEquipo(p);
+        
+         
+         
+     }
  
+ }
  
- 
- 
-    
-    
+    public int retornaM() throws IOException{
+        team.seek(0);
+        int l=0;
+        
+     while(team.getFilePointer()<team.length()){
+         
+         team.readInt();//codigo
+         team.readUTF();//nombre
+         team.readUTF();//ciudad
+         team.readInt();//capacidad
+         int m=team.readInt();
+         boolean q= team.readBoolean();
+         if(m>l){
+            l=m; 
+             
+         }
+         
+     }
+     return l;
+    }
+    public int retornaEdad() throws IOException{
+        team.seek(0);
+        int l=0;
+        
+     while(team.getFilePointer()<team.length()){
+         
+         team.readInt();//codigo
+         team.readUTF();//nombre
+         team.readUTF();//ciudad
+         team.readInt();//capacidad
+         int m=team.readInt();
+         boolean q= team.readBoolean();
+         if(m>l){
+            l=m; 
+             
+         }
+         
+     }
+     return l;
+    }
     
     
     
